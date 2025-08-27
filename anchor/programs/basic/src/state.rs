@@ -3,10 +3,16 @@ use anchor_lang::prelude::*;
 const MAX_BLOG_LEN: usize = 1000;
 const MAX_BLOG_TITLE_LEN: usize = 100;
 
-#[derive(AnchorSerialize, AnchorDeserialize, InitSpace, Clone)]
-pub enum ReactionType{
-    Like, 
-    Dislike
+#[derive(AnchorSerialize, AnchorDeserialize, InitSpace, Clone, PartialEq)]
+pub enum ReactionType {
+    Like,
+    Dislike,
+}
+
+#[error_code]
+pub enum Errors{
+    #[msg("The reaction is already initialized")]
+    ReactionReinitialize,
 }
 
 #[derive(InitSpace)]
@@ -22,7 +28,7 @@ pub struct Blog {
 
 #[derive(InitSpace)]
 #[account]
-pub struct Reaction{
-    pub blog: Pubkey, 
-    pub reaction: ReactionType, 
+pub struct Reaction {
+    pub blog: Pubkey,
+    pub reaction: ReactionType,
 }

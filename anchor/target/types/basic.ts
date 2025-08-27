@@ -228,7 +228,47 @@ export type Basic = {
         74,
         50
       ],
-      "accounts": [],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "blog",
+          "writable": true
+        },
+        {
+          "name": "reaction",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  97,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "blog"
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
       "args": []
     }
   ],
@@ -258,6 +298,13 @@ export type Basic = {
         142,
         139
       ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "reactionReinitialize",
+      "msg": "The reaction is already initialized"
     }
   ],
   "types": [

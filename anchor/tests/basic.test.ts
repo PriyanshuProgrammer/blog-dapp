@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
 import { Basic } from '../target/types/basic'
-import { PublicKey, SystemProgram } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 
 const title = 'The decentralized blog app'
 const content =
@@ -63,6 +63,7 @@ describe('basic', () => {
     expect(threw).toBe(true)
   })
 
+  // reaction tests
   it('should add like reaction on the blog', async () => {
     const blogPda = getBlogAddress(signer.publicKey, program.programId)
     const reactionPda = getReactionAddress(signer.publicKey, blogPda[0], program.programId)
@@ -84,7 +85,26 @@ describe('basic', () => {
     expect(reaction.blog.toString()).toBe(blogPda[0].toString())
   })
 
-  it('should not add both like and dislike reaction on the blog', async () => {
+  it('should check if user can convert the reaction to dislike', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const reactionPda = getReactionAddress(signer.publicKey, blogPda[0], program.programId)
+    await program.methods
+      .dislikeTweet()
+      .accounts({
+        signer: signer.publicKey,
+        blog: blogPda[0],
+        //@ts-ignore
+        reaction: reactionPda[0],
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([signer])
+      .rpc({ commitment: 'confirmed' })
+    let blogContent = await program.account.blog.fetch(blogPda[0])
+    expect(blogContent.dislikes).toBe(1)
+    expect(blogContent.likes).toBe(0)
+  })
+
+  it('should check if user cannot dislike the reaction again', async () => {
     const blogPda = getBlogAddress(signer.publicKey, program.programId)
     const reactionPda = getReactionAddress(signer.publicKey, blogPda[0], program.programId)
     let threw = false
@@ -103,10 +123,40 @@ describe('basic', () => {
     } catch (_) {
       threw = true
     }
-    expect(threw).toBe(true)
     let blogContent = await program.account.blog.fetch(blogPda[0])
-    expect(blogContent.dislikes).toBe(0)
+    expect(blogContent.dislikes).toBe(1)
+    expect(blogContent.likes).toBe(0)
+    expect(threw).toBe(true)
   })
+
+  it('should remove reaction', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const reactionPda = getReactionAddress(signer.publicKey, blogPda[0], program.programId)
+    await program.methods
+      .removeReaction()
+      .accounts({
+        signer: signer.publicKey,
+        blog: blogPda[0],
+        //@ts-ignore
+        reaction: reactionPda[0],
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([signer])
+      .rpc({ commitment: 'confirmed' })
+    let blogContent = await program.account.blog.fetch(blogPda[0])
+    let threw = false
+    try {
+      await program.account.reaction.fetch(reactionPda[0])
+    } catch (_) {
+      threw = true
+    }
+    expect(threw).toBe(true)
+    expect(blogContent.dislikes).toBe(0)
+    expect(blogContent.likes).toBe(0)
+  })
+
+  // comment tests
+
 })
 
 const getBlogAddress = (author: PublicKey, programId: PublicKey) => {
