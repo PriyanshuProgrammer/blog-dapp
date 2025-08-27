@@ -23,5 +23,4 @@ pub struct RemoveReaction<'info> {
         bump
     )]
     pub reaction: Account<'info, Reaction>,
-    pub system_program: Program<'info, System>,
 }

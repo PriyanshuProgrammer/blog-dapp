@@ -6,9 +6,11 @@ import { PublicKey } from '@solana/web3.js'
 const title = 'The decentralized blog app'
 const content =
   "a framework for building Solana programs in Rust, a discriminator is an 8-byte identifier added to the beginning of an account's data. Its primary use is for type safety and correct deserialization of Program Derived Accounts (PDAs) and other accounts."
+const comment = 'This is a really nice blog, i would say'
 
 const BLOG = 'blog'
 const React = 'react'
+const Comment = 'comment'
 describe('basic', () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env()
@@ -156,7 +158,88 @@ describe('basic', () => {
   })
 
   // comment tests
+  it('should create a comment', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const commentPda = getCommentAddress(signer.publicKey, blogPda[0], program.programId)
+    await program.methods
+      .addComment(comment)
+      .accounts({
+        signer: signer.publicKey,
+        blog: blogPda[0],
+        //@ts-ignore
+        comment: commentPda[0],
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([signer])
+      .rpc({ commitment: 'confirmed' })
+    let commentContent = await program.account.comment.fetch(commentPda[0])
+    expect(commentContent.comment).toBe(comment)
+  })
 
+  it('should not re-create a comment with same serial number', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const commentPda = getCommentAddress(signer.publicKey, blogPda[0], program.programId)
+    let threw = false
+    try {
+      await program.methods
+        .addComment(comment)
+        .accounts({
+          signer: signer.publicKey,
+          blog: blogPda[0],
+          //@ts-ignore
+          comment: commentPda[0],
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([signer])
+        .rpc({ commitment: 'confirmed' })
+    } catch (_) {
+      threw = true
+    }
+    expect(threw).toBe(true)
+  })
+
+  it('should remove the comment', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const commentPda = getCommentAddress(signer.publicKey, blogPda[0], program.programId)
+    await program.methods
+      .removeComment(0)
+      .accounts({
+        signer: signer.publicKey,
+        blog: blogPda[0],
+        //@ts-ignore
+        comment: commentPda[0],
+      })
+      .signers([signer])
+      .rpc({ commitment: 'confirmed' })
+    let threw = false
+    try {
+      await program.account.comment.fetch(commentPda[0])
+    } catch (_) {
+      threw = true
+    }
+    expect(threw).toBe(true)
+  })
+
+  it('should not again remove the comment with same serial number', async () => {
+    const blogPda = getBlogAddress(signer.publicKey, program.programId)
+    const commentPda = getCommentAddress(signer.publicKey, blogPda[0], program.programId)
+    let threw = false
+    try {
+      await program.methods
+        .removeComment(0)
+        .accounts({
+          signer: signer.publicKey,
+          blog: blogPda[0],
+          //@ts-ignore
+          comment: commentPda[0],
+        })
+        .signers([signer])
+        .rpc({ commitment: 'confirmed' })
+    } catch (_) {
+      threw = true
+    }
+    expect(threw).toBe(true)
+  })
 })
 
 const getBlogAddress = (author: PublicKey, programId: PublicKey) => {
@@ -173,6 +256,21 @@ const getReactionAddress = (signer: PublicKey, blog: PublicKey, programId: Publi
   )
 }
 
+const getCommentAddress = (signer: PublicKey, blog: PublicKey, programId: PublicKey) => {
+  let bytes = toBigEndianBytes(0)
+  return PublicKey.findProgramAddressSync(
+    [anchor.utils.bytes.utf8.encode(Comment), bytes, signer.toBuffer(), blog.toBuffer()],
+    programId,
+  )
+}
+
 async function airdrop(connection: any, address: any, amount = 1000000000) {
   await connection.confirmTransaction(await connection.requestAirdrop(address, amount), 'confirmed')
+}
+
+function toBigEndianBytes(num: number) {
+  const buffer = new ArrayBuffer(4)
+  const view = new DataView(buffer)
+  view.setUint32(0, num, false)
+  return new Uint8Array(buffer)
 }

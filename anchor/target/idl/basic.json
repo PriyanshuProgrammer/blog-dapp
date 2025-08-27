@@ -19,8 +19,59 @@
         75,
         141
       ],
-      "accounts": [],
-      "args": []
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "blog"
+        },
+        {
+          "name": "comment",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  109,
+                  109,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "blog.comment_counter",
+                "account": "Blog"
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "blog"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "comment",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "dislike_tweet",
@@ -207,8 +258,54 @@
         137,
         109
       ],
-      "accounts": [],
-      "args": []
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "blog"
+        },
+        {
+          "name": "comment",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  109,
+                  109,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "_serial_number"
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "blog"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "_serial_number",
+          "type": "i32"
+        }
+      ]
     },
     {
       "name": "remove_reaction",
@@ -257,10 +354,6 @@
               }
             ]
           }
-        },
-        {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -278,6 +371,19 @@
         203,
         207,
         244
+      ]
+    },
+    {
+      "name": "Comment",
+      "discriminator": [
+        150,
+        135,
+        96,
+        244,
+        55,
+        199,
+        50,
+        65
       ]
     },
     {
@@ -308,6 +414,10 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "blog_author",
+            "type": "pubkey"
+          },
+          {
             "name": "title",
             "type": "string"
           },
@@ -322,6 +432,34 @@
           {
             "name": "dislikes",
             "type": "i32"
+          },
+          {
+            "name": "comment_counter",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Comment",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "blog",
+            "type": "pubkey"
+          },
+          {
+            "name": "comment_author",
+            "type": "pubkey"
+          },
+          {
+            "name": "comment",
+            "type": "string"
+          },
+          {
+            "name": "index",
+            "type": "i32"
           }
         ]
       }
@@ -333,6 +471,10 @@
         "fields": [
           {
             "name": "blog",
+            "type": "pubkey"
+          },
+          {
+            "name": "reaction_author",
             "type": "pubkey"
           },
           {

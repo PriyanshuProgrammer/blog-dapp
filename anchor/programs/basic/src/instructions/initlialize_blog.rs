@@ -4,8 +4,10 @@ use anchor_lang::prelude::*;
 pub fn _initialize_blog(ctx: Context<InitializeBlog>, _serial_number: String, title:String, content:String) -> Result<()> {
     ctx.accounts.blog.title = title;
     ctx.accounts.blog.content = content;
+    ctx.accounts.blog.blog_author = ctx.accounts.signer.key();
     ctx.accounts.blog.likes = 0;
-    ctx.accounts.blog.likes = 0;
+    ctx.accounts.blog.dislikes = 0;
+    ctx.accounts.blog.comment_counter = 0;
     Ok(())
 }
 

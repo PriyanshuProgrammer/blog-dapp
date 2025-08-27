@@ -32,11 +32,11 @@ pub mod basic {
         return _remove_reaction(ctx);
     }
 
-    pub fn add_comment(ctx: Context<AddComment>) -> Result<()> {
-        return _add_comment(ctx);
+    pub fn add_comment(ctx: Context<AddComment>, comment: String) -> Result<()> {
+        return _add_comment(ctx, comment);
     }
 
-    pub fn remove_comment(ctx: Context<RemoveComment>) -> Result<()> {
-        return _remove_comment(ctx);
+    pub fn remove_comment(ctx: Context<RemoveComment>, _serial_number: i32) -> Result<()> {
+        return _remove_comment(ctx, _serial_number);
     }
 }

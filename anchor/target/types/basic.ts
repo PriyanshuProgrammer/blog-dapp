@@ -25,8 +25,59 @@ export type Basic = {
         75,
         141
       ],
-      "accounts": [],
-      "args": []
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "blog"
+        },
+        {
+          "name": "comment",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  109,
+                  109,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "blog.comment_counter",
+                "account": "blog"
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "blog"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "comment",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "dislikeTweet",
@@ -213,8 +264,54 @@ export type Basic = {
         137,
         109
       ],
-      "accounts": [],
-      "args": []
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "blog"
+        },
+        {
+          "name": "comment",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  109,
+                  109,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "serialNumber"
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "blog"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "serialNumber",
+          "type": "i32"
+        }
+      ]
     },
     {
       "name": "removeReaction",
@@ -263,10 +360,6 @@ export type Basic = {
               }
             ]
           }
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": []
@@ -284,6 +377,19 @@ export type Basic = {
         203,
         207,
         244
+      ]
+    },
+    {
+      "name": "comment",
+      "discriminator": [
+        150,
+        135,
+        96,
+        244,
+        55,
+        199,
+        50,
+        65
       ]
     },
     {
@@ -314,6 +420,10 @@ export type Basic = {
         "kind": "struct",
         "fields": [
           {
+            "name": "blogAuthor",
+            "type": "pubkey"
+          },
+          {
             "name": "title",
             "type": "string"
           },
@@ -328,6 +438,34 @@ export type Basic = {
           {
             "name": "dislikes",
             "type": "i32"
+          },
+          {
+            "name": "commentCounter",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "comment",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "blog",
+            "type": "pubkey"
+          },
+          {
+            "name": "commentAuthor",
+            "type": "pubkey"
+          },
+          {
+            "name": "comment",
+            "type": "string"
+          },
+          {
+            "name": "index",
+            "type": "i32"
           }
         ]
       }
@@ -339,6 +477,10 @@ export type Basic = {
         "fields": [
           {
             "name": "blog",
+            "type": "pubkey"
+          },
+          {
+            "name": "reactionAuthor",
             "type": "pubkey"
           },
           {

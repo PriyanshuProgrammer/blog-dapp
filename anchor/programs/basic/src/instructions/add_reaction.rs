@@ -4,7 +4,7 @@ use crate::state::*;
 pub fn _add_reaction(ctx: Context<AddReaction>, reaction: ReactionType) -> Result<()> {
     if ctx.accounts.reaction.blog == ctx.accounts.blog.key(){
         if ctx.accounts.reaction.reaction == reaction{
-            return err!(Errors::ReactionReinitialize);
+            return err!(Errors::ReactionReinitialize)
         }
         match reaction{
             ReactionType::Like => {
@@ -27,6 +27,7 @@ pub fn _add_reaction(ctx: Context<AddReaction>, reaction: ReactionType) -> Resul
             }
         } 
         ctx.accounts.reaction.blog = ctx.accounts.blog.key();
+        ctx.accounts.reaction.reaction_author = ctx.accounts.signer.key();
         ctx.accounts.reaction.reaction = reaction;
     }
    Ok(())
