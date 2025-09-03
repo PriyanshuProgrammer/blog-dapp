@@ -14,6 +14,7 @@ pub fn _add_comment(ctx: Context<AddComment>,comment: String) -> Result<()> {
 pub struct AddComment<'info> {
     #[account(mut)]
     pub signer: Signer<'info>,
+    #[account(mut)]
     pub blog: Account<'info, Blog>,
     #[account(
         init, 

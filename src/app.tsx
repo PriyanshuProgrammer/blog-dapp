@@ -6,25 +6,33 @@ import { lazy } from 'react'
 const links = [
   //
   { label: 'Home', path: '/' },
-  { label: 'Account', path: '/account' },
-  { label: 'Basic Program', path: '/basic' },
+  { label: 'Blogs', path: '/blogs' },
+  { label: 'My Blogs', path: '/my-blogs' },
 ]
 
-const LazyAccountIndex = lazy(() => import('@/components/account/account-index-feature'))
-const LazyAccountDetail = lazy(() => import('@/components/account/account-detail-feature'))
-const LazyBasic = lazy(() => import('@/basic/basic-feature'))
-const LazyDashboard = lazy(() => import('@/components/dashboard/dashboard-feature'))
+const Blogs = lazy(() => import('@/components/blogs'))
+const MyBlogs = lazy(() => import('@/components/myblogs'))
+const LazyDashboard = lazy(() => import('@/components/dashboard'))
+const CreateBlogs = lazy(() => import('@/components/createBlogs'))
+const BlogView = lazy(() => import('@/components/blog-view'))
 
 const routes: RouteObject[] = [
   { index: true, element: <LazyDashboard /> },
   {
-    path: 'account',
+    path: 'blogs',
     children: [
-      { index: true, element: <LazyAccountIndex /> },
-      { path: ':address', element: <LazyAccountDetail /> },
+      { index: true, element: <Blogs /> },
+      { path: ':id', element: <BlogView /> },
     ],
   },
-  { path: 'basic', element: <LazyBasic /> },
+  {
+    path: 'create-blog',
+    children: [{ index: true, element: <CreateBlogs /> }],
+  },
+  {
+    path: 'my-blogs',
+    children: [{ index: true, element: <MyBlogs /> }],
+  }
 ]
 
 console.log({ links, routes })

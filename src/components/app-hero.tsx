@@ -1,4 +1,5 @@
 import React from 'react'
+import { WalletButton } from './solana/solana-provider'
 
 export function AppHero({
   children,
@@ -16,6 +17,7 @@ export function AppHero({
           {typeof title === 'string' ? <h1 className="text-5xl font-bold">{title}</h1> : title}
           {typeof subtitle === 'string' ? <p className="pt-4 md:py-6">{subtitle}</p> : subtitle}
           {children}
+          <WalletButton/>
         </div>
       </div>
     </div>
