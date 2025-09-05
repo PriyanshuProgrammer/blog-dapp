@@ -35,8 +35,6 @@ const routes: RouteObject[] = [
   }
 ]
 
-console.log({ links, routes })
-
 export function App() {
   const router = useRoutes(routes)
   return (
