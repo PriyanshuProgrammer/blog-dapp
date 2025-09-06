@@ -5,6 +5,7 @@ import { useBasicProgram } from '@/basic/basic-data-access'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { getCommentAddress } from '@/lib/utils'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
+import { LoaderOne } from '../ui/loader'
 
 const Comments = ({ id }: { id: string | undefined }) => {
   const { program } = useBasicProgram()
@@ -77,12 +78,16 @@ const Comments = ({ id }: { id: string | undefined }) => {
         </Button>
       </div>
       <div className="flex flex-col gap-4">
-        {comments === null && <div>Loading...</div>}
+        {comments === null && (
+          <div className="flex justify-center">
+            <LoaderOne />
+          </div>
+        )}
         {comments?.length === 0 && <div>No comments yet</div>}
         {comments?.map((comment, index) => (
           <div key={index} className="border p-2 border-gray-200 rounded-sm">
             <p>{comment.account.comment}</p>
-            <p className="text-gray-500 text-[12px]">{comment.publicKey.toBase58()}</p>
+            <p className="text-gray-500 text-[12px] break-all">{comment.publicKey.toBase58()}</p>
           </div>
         ))}
       </div>

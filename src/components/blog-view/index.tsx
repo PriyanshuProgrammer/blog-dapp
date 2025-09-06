@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { getReactionAddress } from '@/lib/utils'
 import { PublicKey, SystemProgram } from '@solana/web3.js'
 import Comments from './comments'
+import { LoaderOne } from '../ui/loader'
 
 interface IBlog {
   title: string
@@ -114,13 +115,15 @@ const BlogView = () => {
 
   //effects
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center min-h-screen mt-20">
       {loading ? (
-        <div className="text-lg text-gray-500">Loading...</div>
+        <div className="py-10">
+          <LoaderOne />
+        </div>
       ) : (
-        <div className="bg-white rounded-lg border border-gray-200 p-8 w-full max-w-xl">
+        <div className="bg-white rounded-lg border-2 border-gray-200 p-8 w-full max-w-xl">
           <h1 className="text-3xl font-bold mb-2 text-gray-800">{blog?.title}</h1>
-          <p className="text-gray-500 text-sm mb-6 whitespace-pre-line">Address: {id}</p>
+          <p className="text-gray-500 text-sm mb-6 break-all">Address: {id}</p>
           <p className="text-gray-700 mb-6 whitespace-pre-line">{blog?.content}</p>
           <div className="flex gap-6 mt-4">
             <Button

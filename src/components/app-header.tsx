@@ -13,12 +13,10 @@ export function AppHeader({ links = [] }: { links: { label: string; path: string
   }
 
   return (
-    <header className="relative pt-4">
-      <div className="mx-auto rounded-2xl z-50 px-4 py-2 w-[90%] md:w-[70%] bg-neutral-100 flex justify-between items-center">
-        <div className="flex items-baseline gap-4">
-          <Link to="/" className="text-xl hover:text-neutral-500">
-            <span>Medium</span>
-          </Link>
+    <header className="absolute w-[90%] pt-4">
+      <div className="mx-auto rounded-2xl z-50 px-4 py-2 border-1 border-gray-300 flex justify-between items-center">
+        <div className="flex items-center justify-center gap-4">
+          <span className="text-2xl font-bold text-slate-600">SolBook</span>
           <div className="hidden md:flex items-center">
             <ul className="flex gap-4 flex-nowrap items-center">
               {links.map(({ label, path }) => (
