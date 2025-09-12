@@ -12,9 +12,14 @@ export function AppLayout({
 }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-      <div className="flex flex-col relative items-center min-h-screen">
+      <div
+        style={{
+          fontFamily: 'courier-new, monospace',
+        }}
+        className="flex flex-col relative items-center "
+      >
         <AppHeader links={links} />
-        <main className="flex-grow container mx-auto w-full p-4">{children}</main>
+        <main className="w-full border-b h-[85dvh]">{children}</main>
       </div>
       <Toaster />
     </ThemeProvider>
